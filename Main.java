@@ -9,6 +9,8 @@ public class Main {
     thing.add(4);
     thing.add(11);
 
+
+
     thing.print();
 
   }

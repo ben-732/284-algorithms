@@ -75,7 +75,13 @@ class Node {
       return current;
 
     return recursiveFindAdd(val, next);
+  }
 
+  public static Node recursiveFixHeight(Node node) {
+
+    node.setHeight();
+
+    return recursiveFixHeight(node.parent);
   }
 
 }

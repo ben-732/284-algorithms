@@ -59,9 +59,5 @@ public class Avl {
     sb.append("}");
     System.out.println(sb.toString());
 
-
-
   }
-
-
 }
