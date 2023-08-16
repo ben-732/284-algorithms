@@ -1,3 +1,6 @@
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Stack;
 
 public class Avl {
@@ -15,7 +18,6 @@ public class Avl {
 
 
     // Add the node to the tree
-
     Node node = new Node(val, parent);
 
     if (val < parent.getValue()) {
@@ -23,6 +25,9 @@ public class Avl {
     } else {
       parent.setRight(node);
     }
+
+    // Fix heights
+    Node.fixHeight(parent);
   }
 
 
@@ -39,7 +44,14 @@ public class Avl {
 
 
     while (stack.size() > 0) {
+
       Node current = stack.pop();
+
+      int currentVal = current.getValue();
+
+      sb.append(String.format("%d [label=\"%d - (H%d)\"]\n", currentVal, currentVal,
+          current.getHeight()));
+
 
       if (current.getLeft() != null) {
 
@@ -58,6 +70,18 @@ public class Avl {
 
     sb.append("}");
     System.out.println(sb.toString());
+
+    BufferedWriter writer;
+    try {
+      writer = new BufferedWriter(new FileWriter("out.txt"));
+      writer.write(sb.toString());
+      writer.close();
+
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+
+
 
   }
 }

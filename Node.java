@@ -48,6 +48,10 @@ class Node {
     return value;
   }
 
+  public Node getParent() {
+    return this.parent;
+  }
+
   public void setLeft(Node l) {
     this.left = l;
   }
@@ -77,11 +81,15 @@ class Node {
     return recursiveFindAdd(val, next);
   }
 
-  public static Node recursiveFixHeight(Node node) {
+  public static void fixHeight(Node node) {
 
-    node.setHeight();
+    Node next = node;
 
-    return recursiveFixHeight(node.parent);
+    while (next != null) {
+      next.setHeight();
+      next = next.getParent();
+    }
+
   }
 
 }

@@ -8,6 +8,8 @@ public class Main {
     thing.add(1);
     thing.add(4);
     thing.add(11);
+    thing.add(12);
+    thing.add(5);
 
 
 
