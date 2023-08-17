@@ -17,23 +17,22 @@ class Node {
 
   public void setHeight() {
     // If there is no left or right, set height to 0
-    if (this.left == null && this.right == null) {
+    if (this.left == null && this.right == null)
       this.height = 0;
-      return;
-    }
+    else
+      this.height = Math.max(this.getLeftHeight(), this.getRightHeight()) + 1;
+  }
 
-    // Set height to the max of the left or right
-    if (this.left == null) {
-      this.height = this.right.getHeight() + 1;
-      return;
-    }
+  public int getLeftHeight() {
+    if (this.left == null)
+      return 0;
+    return this.left.getHeight();
+  }
 
-    if (this.right == null) {
-      this.height = this.left.getHeight() + 1;
-      return;
-    }
-
-    this.height = Math.max(this.left.getHeight(), this.right.getHeight()) + 1;
+  public int getRightHeight() {
+    if (this.right == null)
+      return 0;
+    return this.right.getHeight();
   }
 
   public Node getLeft() {
@@ -81,15 +80,6 @@ class Node {
     return recursiveFindAdd(val, next);
   }
 
-  public static void fixHeight(Node node) {
 
-    Node next = node;
-
-    while (next != null) {
-      next.setHeight();
-      next = next.getParent();
-    }
-
-  }
 
 }
