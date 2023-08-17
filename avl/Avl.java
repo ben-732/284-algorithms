@@ -18,9 +18,12 @@ public class Avl {
       return;
     }
 
-    // Find the location for the new node to go
-    Node parent = Node.recursiveFindAdd(val, this.root);
+    // Find the parent of the new node
+    Node parent = root;
 
+    while (parent.compareValue(val) != null) {
+      parent = parent.compareValue(val);
+    }
 
     // Add the node to the tree
     Node node = new Node(val, parent);
@@ -31,7 +34,7 @@ public class Avl {
       parent.setRight(node);
     }
 
-    // Fix heights
+    // Fix heights of the tree starting from new node
     balanceTree(parent);
   }
 

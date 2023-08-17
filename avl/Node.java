@@ -132,6 +132,13 @@ class Node {
   }
 
 
+  /**
+   * Function to compare the value of the node to a given value and return an appropriate child
+   * 
+   * @param val value to compare to
+   * @return left child if val is less than node value, right child if val is greater than node
+   *         value
+   */
   public Node compareValue(int val) {
     if (val < this.value) {
       return this.left;
@@ -139,16 +146,4 @@ class Node {
 
     return this.right;
   }
-
-  public static Node recursiveFindAdd(int val, Node current) {
-    Node next = current.compareValue(val);
-
-    if (next == null)
-      return current;
-
-    return recursiveFindAdd(val, next);
-  }
-
-
-
 }
