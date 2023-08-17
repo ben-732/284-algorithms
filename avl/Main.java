@@ -2,22 +2,19 @@ public class Main {
   public static void main(String[] args) {
     Avl thing = new Avl();
 
-    // thing.add(10);
-    // thing.add(2);
-    // thing.add(3);
-    // thing.add(1);
-    // thing.add(4);
-    // thing.add(11);
-    // thing.add(12);
-    // // thing.add(5);
 
-    // thing.add(1);
 
-    for (int i = 1; i <= 20; i++) {
+    for (int i = 1; i <= 1000000; i++) {
       thing.add(i);
     }
 
-    // thing.remove(3);
+    thing.remove(6);
+    thing.remove(7);
+    thing.remove(13);
+    thing.remove(33);
+    thing.remove(124);
+    thing.remove(22);
+    thing.remove(93);
 
     thing.print();
 

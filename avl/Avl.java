@@ -30,6 +30,11 @@ public class Avl {
     balanceTree(parent);
   }
 
+  /**
+   * A function to rotate a node in the AVL tree
+   * 
+   * @param node the node to rotate
+   */
   private void rotate(Node node) {
     // If node is root, do nothing
 
@@ -123,7 +128,6 @@ public class Avl {
       } else if (next.getValue() < key) {
         next = next.getRight();
       } else {
-        System.out.println("Found: " + next.getValue() + " for key: " + key);
         return next;
       }
     }
@@ -137,7 +141,6 @@ public class Avl {
 
     // If the node has no children remove parent's reference
     if (node.getHeight() == 0) {
-      System.out.println("sd1");
       // If parent is root
       if (parent == null) {
         root = null;
@@ -183,6 +186,9 @@ public class Avl {
 
       // If there are two children
     }
+
+    // balance the tree from the parent up
+    balanceTree(parent);
   }
 
   public Node findMin(Node node) {
@@ -196,6 +202,7 @@ public class Avl {
   }
 
   public void remove(int key) {
+    System.out.println("remving: " + key + " from tree");
     Node node = find(key);
 
     // If node not found, do nothing
@@ -214,7 +221,12 @@ public class Avl {
       simpleRemove(newNode);
 
       // Replace this nodes key with the old key
-      node.setValue(key);
+      node.setValue(newNode.getValue());
+
+      // if the removed node had a parent, balance the tree from that node
+      if (newNode.getParent() != null)
+        balanceTree(newNode.getParent());
+
     }
 
   }
