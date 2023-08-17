@@ -5,16 +5,30 @@ class Node {
   private Node parent;
   private int value;
 
+  /**
+   * Constructor for Node
+   * 
+   * @param value value of node
+   * @param p parent of node
+   */
   public Node(int value, Node p) {
     this.parent = p;
     this.value = value;
     this.height = 0;
   }
 
+  /**
+   * Get the height of the node
+   * 
+   * @return height of node
+   */
   public int getHeight() {
     return this.height;
   }
 
+  /**
+   * Set the height of the node from the heights of its children
+   */
   public void setHeight() {
     // If there is no left or right, set height to 0
     if (this.left == null && this.right == null)
@@ -23,49 +37,100 @@ class Node {
       this.height = Math.max(this.getLeftHeight(), this.getRightHeight()) + 1;
   }
 
+  /**
+   * Get the height of the left child
+   * 
+   * @return height of left child
+   */
   public int getLeftHeight() {
     if (this.left == null)
       return 0;
     return this.left.getHeight();
   }
 
+  /**
+   * Get the height of the right child
+   * 
+   * @return height of right child
+   */
   public int getRightHeight() {
     if (this.right == null)
       return 0;
     return this.right.getHeight();
   }
 
+  /**
+   * Get the left child
+   * 
+   * @return left child
+   */
   public Node getLeft() {
     return this.left;
   }
 
+  /**
+   * Get the right child
+   * 
+   * @return right child
+   */
   public Node getRight() {
     return this.right;
   }
 
+  /**
+   * Get the value of the node
+   * 
+   * @return value of node
+   */
   public int getValue() {
     return value;
   }
 
+  /**
+   * Set the value of the node
+   * 
+   * @param val value to set node to
+   */
   public void setValue(int val) {
     this.value = val;
   }
 
+  /**
+   * Get the parent of the node
+   * 
+   * @return parent of node
+   */
   public Node getParent() {
     return this.parent;
   }
 
+  /**
+   * Set the left child of the node
+   * 
+   * @param l node to set as left child
+   */
   public void setLeft(Node l) {
     this.left = l;
   }
 
+  /**
+   * Set the right child of the node
+   * 
+   * @param r node to set as right child
+   */
   public void setRight(Node r) {
     this.right = r;
   }
 
+  /**
+   * Set the parent of the node
+   * 
+   * @param p node to set as parent
+   */
   public void setParent(Node p) {
     this.parent = p;
   }
+
 
   public Node compareValue(int val) {
     if (val < this.value) {

@@ -4,7 +4,7 @@ public class Main {
 
 
 
-    for (int i = 1; i <= 1000000; i++) {
+    for (int i = 1; i <= 128; i++) {
       thing.add(i);
     }
 

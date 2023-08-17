@@ -6,6 +6,11 @@ import java.util.Stack;
 public class Avl {
   Node root;
 
+  /**
+   * Add a new node to the tree
+   * 
+   * @param val
+   */
   public void add(int val) {
     // If root is null
     if (this.root == null) {
@@ -13,7 +18,7 @@ public class Avl {
       return;
     }
 
-    // Find the location
+    // Find the location for the new node to go
     Node parent = Node.recursiveFindAdd(val, this.root);
 
 
@@ -89,6 +94,12 @@ public class Avl {
 
   }
 
+  /**
+   * A helper function to balance the tree by moving up from a node fixing heights and rotating when
+   * needed
+   * 
+   * @param node node to traverse up from
+   */
   private void balanceTree(Node node) {
 
     Node next = node;
@@ -97,9 +108,9 @@ public class Avl {
     while (next != null) {
       next.setHeight();
 
+      // Calculate the difference in heights
       int heightDifference = next.getLeftHeight() - next.getRightHeight();
 
-      // System.out.printf("Node: %d, h diff: %d\n", next.getValue(), heightDifference);
 
       // If needs rotation, rotate otherwise continue up the tree
       if (heightDifference < -1) {
@@ -108,16 +119,17 @@ public class Avl {
         rotate(next.getLeft());
       } else {
         next = next.getParent();
-
       }
-
-
     }
-
-
-
   }
 
+  /**
+   * Find a node in the tree with a given value
+   * 
+   * @param key value to find
+   * 
+   * @return the node with the given value or null if not found
+   */
   public Node find(int key) {
 
     Node next = this.root;
@@ -135,6 +147,13 @@ public class Avl {
     return null;
   }
 
+  /**
+   * Helper function to remove a node from tree when it has less than 2 children
+   * 
+   * Balances the tree from the parent of the removed node
+   * 
+   * @param node the node to remove
+   */
   private void simpleRemove(Node node) {
     // Get parent of node
     Node parent = node.getParent();
@@ -201,8 +220,16 @@ public class Avl {
     return next;
   }
 
+  /**
+   * Remove a node from the tree
+   * 
+   * Handles the cases where there are 0, 1, or 2 children
+   * 
+   * If two children, Balances the tree from the parent of the node that is "moved"
+   * 
+   * @param key the value of the node to remove
+   */
   public void remove(int key) {
-    System.out.println("remving: " + key + " from tree");
     Node node = find(key);
 
     // If node not found, do nothing
@@ -232,48 +259,47 @@ public class Avl {
   }
 
 
-
+  /**
+   * Function to create an out.dot file to visualize the tree
+   * 
+   * http://www.webgraphviz.com/
+   */
   public void print() {
     StringBuilder sb = new StringBuilder("digraph g{\n");
     Stack<Node> stack = new Stack<Node>();
 
-    if (root == null) {
-      // System.out.println("Empty");
-      return;
-    }
+    // If there is no root, don't render any nodes
+    if (root != null) {
 
-    stack.push(root);
+      // use a DFS to traverse the tree adding nodes to the output.
+      stack.push(root);
 
+      while (stack.size() > 0) {
 
-    while (stack.size() > 0) {
+        Node current = stack.pop();
 
-      Node current = stack.pop();
+        int parentVal = current.getParent() == null ? 0 : current.getParent().getValue();
 
-      int currentVal = current.getValue();
-      int parent = current.getParent() == null ? 0 : current.getParent().getValue();
+        // Add the node to the output
+        sb.append(String.format("%d [label=\"%d - (H%d, P%d)\"]\n", current.getValue(),
+            current.getValue(), current.getHeight(), parentVal));
 
-      sb.append(String.format("%d [label=\"%d - (H%d, P%d)\"]\n", currentVal, currentVal,
-          current.getHeight(), parent));
+        // Add the edges and push the children to the stack
+        if (current.getLeft() != null) {
+          sb.append(String.format("%d -> %d\n", current.getValue(), current.getLeft().getValue()));
+          stack.push(current.getLeft());
+        }
 
-
-      if (current.getLeft() != null) {
-
-
-        sb.append(String.format("%d -> %d\n", current.getValue(), current.getLeft().getValue()));
-        stack.push(current.getLeft());
-
-      }
-
-      if (current.getRight() != null) {
-        sb.append(String.format("%d -> %d\n", current.getValue(), current.getRight().getValue()));
-        stack.push(current.getRight());
-
+        if (current.getRight() != null) {
+          sb.append(String.format("%d -> %d\n", current.getValue(), current.getRight().getValue()));
+          stack.push(current.getRight());
+        }
       }
     }
 
     sb.append("}");
-    // System.out.println(sb.toString());
 
+    // Write the output to a file [out.dot]
     BufferedWriter writer;
     try {
       writer = new BufferedWriter(new FileWriter("out.dot"));
@@ -283,8 +309,5 @@ public class Avl {
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-
-
   }
 }
