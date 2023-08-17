@@ -11,11 +11,13 @@ public class Main {
     // thing.add(12);
     // // thing.add(5);
 
-    for (int i = 0; i < 20; i++) {
+    // thing.add(1);
+
+    for (int i = 1; i <= 20; i++) {
       thing.add(i);
     }
 
-    // thing.remove(2);
+    // thing.remove(3);
 
     thing.print();
 

@@ -45,15 +45,25 @@ public class Avl {
     if (parent.getRight() == node) {
       parent.setRight(node.getLeft());
       node.setLeft(parent);
+
       parent.setParent(node);
+
+      // If there is a right element, update its parent
+      if (parent.getRight() != null)
+        parent.getRight().setParent(parent);
+
 
     } else {
       // if node is the left child of parent
       parent.setLeft(node.getRight());
       node.setRight(parent);
-      parent.setLeft(node);
-    }
 
+      parent.setParent(node);
+
+      // if there is a left elemenet, update its parent
+      if (parent.getLeft() != null)
+        parent.getLeft().setParent(parent);
+    }
 
     // Set nodes parent to grandparent node
     node.setParent(grandparent);
@@ -113,6 +123,7 @@ public class Avl {
       } else if (next.getValue() < key) {
         next = next.getRight();
       } else {
+        System.out.println("Found: " + next.getValue() + " for key: " + key);
         return next;
       }
     }
@@ -126,6 +137,7 @@ public class Avl {
 
     // If the node has no children remove parent's reference
     if (node.getHeight() == 0) {
+      System.out.println("sd1");
       // If parent is root
       if (parent == null) {
         root = null;
@@ -226,9 +238,10 @@ public class Avl {
       Node current = stack.pop();
 
       int currentVal = current.getValue();
+      int parent = current.getParent() == null ? 0 : current.getParent().getValue();
 
-      sb.append(String.format("%d [label=\"%d - (H%d)\"]\n", currentVal, currentVal,
-          current.getHeight()));
+      sb.append(String.format("%d [label=\"%d - (H%d, P%d)\"]\n", currentVal, currentVal,
+          current.getHeight(), parent));
 
 
       if (current.getLeft() != null) {
