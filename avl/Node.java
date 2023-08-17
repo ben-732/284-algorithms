@@ -47,6 +47,10 @@ class Node {
     return value;
   }
 
+  public void setValue(int val) {
+    this.value = val;
+  }
+
   public Node getParent() {
     return this.parent;
   }

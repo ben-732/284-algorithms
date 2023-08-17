@@ -103,22 +103,110 @@ public class Avl {
 
   }
 
-  public int find(int val) {
+  public Node find(int key) {
 
     Node next = this.root;
 
     while (next != null) {
-      if (next.getValue() > val) {
+      if (next.getValue() > key) {
         next = next.getLeft();
-      } else if (next.getValue() < val) {
+      } else if (next.getValue() < key) {
         next = next.getRight();
       } else {
-        return next.getValue();
+        return next;
       }
     }
 
-    return -1;
+    return null;
   }
+
+  private void simpleRemove(Node node) {
+    // Get parent of node
+    Node parent = node.getParent();
+
+    // If the node has no children remove parent's reference
+    if (node.getHeight() == 0) {
+      // If parent is root
+      if (parent == null) {
+        root = null;
+        // If not, handle left or right
+      } else if (parent.getLeft() == node) {
+        parent.setLeft(null);
+      } else {
+        parent.setRight(null);
+      }
+
+      // If node has 1 child on the left
+    } else if (node.getRight() == null) {
+      // if node is root
+      if (node.getParent() == null) {
+        root = node.getLeft();
+        root.setParent(null);
+      } else {
+        // Handle on the left or right of parent
+        if (parent.getLeft() == node) {
+          parent.setLeft(node.getLeft());
+        } else {
+          parent.setRight(node.getLeft());
+        }
+
+        node.getLeft().setParent(parent);
+      }
+      // Do the same thing but for on the right
+    } else if (node.getLeft() == null) {
+      // if node is root
+      if (node.getParent() == null) {
+        root = node.getRight();
+        root.setParent(null);
+      } else {
+        // Handle on the left or right of parent
+        if (parent.getLeft() == node) {
+          parent.setLeft(node.getRight());
+        } else {
+          parent.setRight(node.getRight());
+        }
+
+        node.getRight().setParent(parent);
+      }
+
+      // If there are two children
+    }
+  }
+
+  public Node findMin(Node node) {
+    Node next = node;
+
+    while (next.getLeft() != null) {
+      next = next.getLeft();
+    }
+
+    return next;
+  }
+
+  public void remove(int key) {
+    Node node = find(key);
+
+    // If node not found, do nothing
+    if (node == null)
+      return;
+
+    // If the node has 0 or 1 children
+    if (node.getLeft() == null || node.getRight() == null) {
+      simpleRemove(node);
+      // If the node has two children
+    } else {
+      // Find the next biggest node
+      Node newNode = findMin(node.getRight());
+
+      // Remove it
+      simpleRemove(newNode);
+
+      // Replace this nodes key with the old key
+      node.setValue(key);
+    }
+
+  }
+
 
 
   public void print() {
@@ -159,11 +247,11 @@ public class Avl {
     }
 
     sb.append("}");
-    System.out.println(sb.toString());
+    // System.out.println(sb.toString());
 
     BufferedWriter writer;
     try {
-      writer = new BufferedWriter(new FileWriter("out.txt"));
+      writer = new BufferedWriter(new FileWriter("out.dot"));
       writer.write(sb.toString());
       writer.close();
 
