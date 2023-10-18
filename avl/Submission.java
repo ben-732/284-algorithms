@@ -18,26 +18,16 @@ public class Submission {
 
     for (int i = 0; i < 1000000; i++) {
 
-      // if (i % 10 == 0)
 
       // if 1, contains int. if 0, add int
 
       if (in.nextInt() == 0) {
-        int s = in.nextInt();
 
-        System.out.println("Add: " + i + " - " + s);
-
-        tree.add(s);
-
-        System.out.println("added");
-
-
+        tree.add(in.nextInt());
 
       } else {
-        int s = in.nextInt();
 
-        System.out.println("Find: " + i + " - " + s + " - " + tree.find(s));
-        out.println(tree.find(s) == null ? "0" : "1");
+        out.println(tree.contains(in.nextInt()) ? "1" : "0");
 
       }
 
@@ -67,8 +57,7 @@ public class Submission {
     }
   }
 
-
-  public static class Node {
+  static class Node {
     private int height;
     private Node left;
     private Node right;
@@ -123,6 +112,7 @@ public class Submission {
     }
 
     public int getBalance() {
+
       return this.getLeftHeight() - this.getRightHeight();
     }
 
@@ -178,14 +168,14 @@ public class Submission {
      */
     public void setLeft(Node l) {
       if (this.left != null) {
-        this.left.setParent(null);
+        this.left.parent = null;
       }
-      if (l != null)
-        l.setParent(this);
+
+      if (l != null) {
+        l.parent = this;
+      }
 
       this.left = l;
-
-
     }
 
     /**
@@ -195,14 +185,14 @@ public class Submission {
      */
     public void setRight(Node r) {
       if (this.right != null) {
-        this.right.setParent(null);
+        this.right.parent = null;
       }
 
-      if (r != null)
-        r.setParent(this);
+      if (r != null) {
+        r.parent = this;
+      }
 
       this.right = r;
-
 
     }
 
@@ -212,7 +202,19 @@ public class Submission {
      * @param p node to set as parent
      */
     public void setParent(Node p) {
+
+      if (p == null && this.parent != null) {
+        if (this.parent.left == this) {
+          this.parent.left = null;
+        } else {
+          this.parent.right = null;
+        }
+      }
+
+
       this.parent = p;
+
+
     }
 
 
@@ -232,7 +234,8 @@ public class Submission {
     }
   }
 
-  public static class Avl {
+
+  static class Avl {
     Node root;
 
     /**
@@ -270,7 +273,9 @@ public class Submission {
 
 
     private void rotateLeft(Node node) {
-
+      // system.out.println("left Rotating node " + node.getValue() + " - " + node.getHeight() + " -
+      // "
+      // + node.getBalance());
 
 
       Node parent = node.getParent();
@@ -297,21 +302,23 @@ public class Submission {
       node.setHeight();
       child.setHeight();
 
-
     }
 
 
     private void rotateRight(Node node) {
+      // system.out.println("Right Rotating node " + node.getValue() + " - " + node.getHeight() + "
+      // -
+      // "
+      // + node.getBalance());
 
 
       Node parent = node.getParent();
-      Node child = node.getRight();
+      Node child = node.getLeft();
 
       if (child == null) {
         return;
       }
 
-      // Left rotate
       node.setLeft(child.getRight());
 
       child.setRight(node);
@@ -326,6 +333,7 @@ public class Submission {
 
       node.setHeight();
       child.setHeight();
+
     }
 
 
@@ -342,10 +350,10 @@ public class Submission {
       // Move up through tree up from node fixing heights
       while (next != null) {
 
-
         next.setHeight();
 
         int heightDifference = next.getBalance();
+
 
         // preform appropriate rotation based on balance
         if (heightDifference < -1) {
@@ -356,7 +364,7 @@ public class Submission {
 
           rotateLeft(next);
 
-
+          next = node;
         } else if (heightDifference > 1) {
 
           if (next.getLeft().getBalance() < 0) {
@@ -364,9 +372,12 @@ public class Submission {
           }
 
           rotateRight(next);
-        } else {
-          next = next.getParent();
         }
+
+        next = next.getParent();
+
+
+
       }
     }
 
@@ -395,172 +406,11 @@ public class Submission {
       return null;
     }
 
-    /**
-     * Helper function to remove a node from tree when it has less than 2 children
-     * 
-     * Balances the tree from the parent of the removed node
-     * 
-     * @param node the node to remove
-     */
-    private void simpleRemove(Node node) {
-      // Get parent of node
-      Node parent = node.getParent();
-
-      // If the node has no children remove parent's reference
-      if (node.getHeight() == 0) {
-        // If parent is root
-        if (parent == null) {
-          root = null;
-          // If not, handle left or right
-        } else if (parent.getLeft() == node) {
-          parent.setLeft(null);
-        } else {
-          parent.setRight(null);
-        }
-
-        // If node has 1 child on the left
-      } else if (node.getRight() == null) {
-        // if node is root
-        if (node.getParent() == null) {
-          root = node.getLeft();
-          root.setParent(null);
-        } else {
-          // Handle on the left or right of parent
-          if (parent.getLeft() == node) {
-            parent.setLeft(node.getLeft());
-          } else {
-            parent.setRight(node.getLeft());
-          }
-
-        }
-        // Do the same thing but for on the right
-      } else if (node.getLeft() == null) {
-        // if node is root
-        if (node.getParent() == null) {
-          root = node.getRight();
-          root.setParent(null);
-        } else {
-          // Handle on the left or right of parent
-          if (parent.getLeft() == node) {
-            parent.setLeft(node.getRight());
-          } else {
-            parent.setRight(node.getRight());
-          }
-
-        }
-
-        // If there are two children
-      }
-
-      // balance the tree from the parent up
-      balanceTree(parent);
+    public boolean contains(int key) {
+      return find(key) != null;
     }
 
-    public Node findMin(Node node) {
-      Node next = node;
-
-      while (next.getLeft() != null) {
-        next = next.getLeft();
-      }
-
-      return next;
-    }
-
-    /**
-     * Remove a node from the tree
-     * 
-     * Handles the cases where there are 0, 1, or 2 children
-     * 
-     * If two children, Balances the tree from the parent of the node that is "moved"
-     * 
-     * @param key the value of the node to remove
-     */
-    public void remove(int key) {
-      Node node = find(key);
-
-      // If node not found, do nothing
-      if (node == null)
-        return;
-
-      // If the node has 0 or 1 children
-      if (node.getLeft() == null || node.getRight() == null) {
-        simpleRemove(node);
-        // If the node has two children
-      } else {
-        // Find the next biggest node
-        Node newNode = findMin(node.getRight());
-
-        // Remove it
-        simpleRemove(newNode);
-
-        // Replace this nodes key with the old key
-        node.setValue(newNode.getValue());
-
-        // if the removed node had a parent, balance the tree from that node
-        if (newNode.getParent() != null)
-          balanceTree(newNode.getParent());
-
-      }
-
-    }
-
-
-    /**
-     * Function to create an out.dot file to visualize the tree
-     * 
-     * http://www.webgraphviz.com/
-     */
-    public void print() {
-      StringBuilder sb = new StringBuilder("digraph g{\n");
-      Stack<Node> stack = new Stack<Node>();
-
-      // If there is no root, don't render any nodes
-      if (root != null) {
-
-        // use a DFS to traverse the tree adding nodes to the output.
-        stack.push(root);
-
-        while (stack.size() > 0) {
-
-          Node current = stack.pop();
-
-          int parentVal = current.getParent() == null ? 0 : current.getParent().getValue();
-
-          // Add the node to the output
-          sb.append(String.format("%d [label=\"%d - (H%d, P%d)\"]\n", current.getValue(),
-              current.getValue(), current.getHeight(), parentVal));
-
-          // Add the edges and push the children to the stack
-          if (current.getLeft() != null) {
-            sb.append(
-                String.format("%d -> %d\n", current.getValue(), current.getLeft().getValue()));
-            stack.push(current.getLeft());
-          }
-
-          if (current.getRight() != null) {
-            sb.append(
-                String.format("%d -> %d\n", current.getValue(), current.getRight().getValue()));
-            stack.push(current.getRight());
-          }
-        }
-      }
-
-      sb.append("}");
-
-      // Write the output to a file [out.dot]
-      BufferedWriter writer;
-      try {
-        writer = new BufferedWriter(new FileWriter("out.dot"));
-        writer.write(sb.toString());
-        writer.close();
-
-      } catch (IOException e) {
-        e.printStackTrace();
-      }
-    }
   }
 
 
-
 }
-

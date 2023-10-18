@@ -1,11 +1,13 @@
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
 
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws FileNotFoundException {
 
     FastScanner in = new FastScanner();
     PrintWriter out = new PrintWriter(System.out);
@@ -22,24 +24,24 @@ public class Main {
       if (in.nextInt() == 0) {
         int s = in.nextInt();
 
-
-
-        System.out.println("Add: " + i + " - " + s);
+        // system.out.println("Add: " + i + " - " + s);
 
         if (!tree.contains(s))
           tree.add(s);
 
-        System.out.println("added");
+        // system.out.println("added");
 
 
 
       } else {
         int s = in.nextInt();
 
-        System.out.println("Find: " + i + " - " + s + " - " + tree.find(s));
+        // system.out.println("Find: " + i + " - " + s + " - " + tree.find(s));
         out.println(tree.contains(s) ? "0" : "1");
 
       }
+
+      tree.print();
 
 
     }
@@ -51,8 +53,12 @@ public class Main {
 
 
   static class FastScanner {
-    BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+    BufferedReader br = new BufferedReader(new FileReader("test.txt"));
     StringTokenizer st = new StringTokenizer("");
+
+    public FastScanner() throws FileNotFoundException {
+
+    }
 
     String next() {
       while (!st.hasMoreTokens())

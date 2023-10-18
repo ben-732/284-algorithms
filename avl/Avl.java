@@ -41,7 +41,8 @@ public class Avl {
 
 
   private void rotateLeft(Node node) {
-
+    // system.out.println("left Rotating node " + node.getValue() + " - " + node.getHeight() + " - "
+    // + node.getBalance());
 
 
     Node parent = node.getParent();
@@ -68,21 +69,22 @@ public class Avl {
     node.setHeight();
     child.setHeight();
 
-
   }
 
 
   private void rotateRight(Node node) {
+    // system.out.println("Right Rotating node " + node.getValue() + " - " + node.getHeight() + " -
+    // "
+    // + node.getBalance());
 
 
     Node parent = node.getParent();
-    Node child = node.getRight();
+    Node child = node.getLeft();
 
     if (child == null) {
       return;
     }
 
-    // Left rotate
     node.setLeft(child.getRight());
 
     child.setRight(node);
@@ -94,6 +96,9 @@ public class Avl {
     } else {
       parent.setRight(child);
     }
+
+    node.setHeight();
+    child.setHeight();
 
   }
 
@@ -111,7 +116,6 @@ public class Avl {
     // Move up through tree up from node fixing heights
     while (next != null) {
 
-
       next.setHeight();
 
       int heightDifference = next.getBalance();
@@ -126,9 +130,7 @@ public class Avl {
 
         rotateLeft(next);
 
-
         next = node;
-
       } else if (heightDifference > 1) {
 
         if (next.getLeft().getBalance() < 0) {
@@ -136,18 +138,12 @@ public class Avl {
         }
 
         rotateRight(next);
-
-        // System.out.println("post rotate");
-        // System.out.println("Node: " + next.getValue());
-        // System.out.println("Balance: " + next.getBalance());
-        // System.out.println(
-        // "Parent: " + (next.getParent() == null ? "null" : next.getParent().getValue()));
-        // System.out.println();
-
-        next = node;
-      } else {
-        next = next.getParent();
       }
+
+      next = next.getParent();
+
+
+
     }
   }
 

@@ -53,6 +53,7 @@ class Node {
   }
 
   public int getBalance() {
+
     return this.getLeftHeight() - this.getRightHeight();
   }
 
@@ -108,14 +109,14 @@ class Node {
    */
   public void setLeft(Node l) {
     if (this.left != null) {
-      this.left.setParent(null);
+      this.left.parent = null;
     }
-    if (l != null)
-      l.setParent(this);
+
+    if (l != null) {
+      l.parent = this;
+    }
 
     this.left = l;
-
-
   }
 
   /**
@@ -125,14 +126,14 @@ class Node {
    */
   public void setRight(Node r) {
     if (this.right != null) {
-      this.right.setParent(null);
+      this.right.parent = null;
     }
 
-    if (r != null)
-      r.setParent(this);
+    if (r != null) {
+      r.parent = this;
+    }
 
     this.right = r;
-
 
   }
 
@@ -142,7 +143,19 @@ class Node {
    * @param p node to set as parent
    */
   public void setParent(Node p) {
+
+    if (p == null && this.parent != null) {
+      if (this.parent.left == this) {
+        this.parent.left = null;
+      } else {
+        this.parent.right = null;
+      }
+    }
+
+
     this.parent = p;
+
+
   }
 
 
