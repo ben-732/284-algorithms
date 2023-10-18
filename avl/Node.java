@@ -5,14 +5,7 @@ class Node {
   private Node parent;
   private int value;
 
-  /**
-   * Constructor for Node
-   * 
-   * @param value value of node
-   * @param p parent of node
-   */
-  public Node(int value, Node p) {
-    this.parent = p;
+  public Node(int value) {
     this.value = value;
     this.height = 0;
   }
@@ -57,6 +50,10 @@ class Node {
     if (this.right == null)
       return 0;
     return this.right.getHeight();
+  }
+
+  public int getBalance() {
+    return this.getLeftHeight() - this.getRightHeight();
   }
 
   /**
@@ -105,12 +102,20 @@ class Node {
   }
 
   /**
-   * Set the left child of the node
+   * Set the left child of the ?
    * 
    * @param l node to set as left child
    */
   public void setLeft(Node l) {
+    if (this.left != null) {
+      this.left.setParent(null);
+    }
+    if (l != null)
+      l.setParent(this);
+
     this.left = l;
+
+
   }
 
   /**
@@ -119,7 +124,16 @@ class Node {
    * @param r node to set as right child
    */
   public void setRight(Node r) {
+    if (this.right != null) {
+      this.right.setParent(null);
+    }
+
+    if (r != null)
+      r.setParent(this);
+
     this.right = r;
+
+
   }
 
   /**
@@ -147,3 +161,5 @@ class Node {
     return this.right;
   }
 }
+
+

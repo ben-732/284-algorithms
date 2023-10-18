@@ -14,7 +14,7 @@ public class Avl {
   public void add(int val) {
     // If root is null
     if (this.root == null) {
-      this.root = new Node(val, null);
+      this.root = new Node(val);
       return;
     }
 
@@ -25,77 +25,78 @@ public class Avl {
       parent = parent.compareValue(val);
     }
 
+
     // Add the node to the tree
-    Node node = new Node(val, parent);
+    Node node = new Node(val);
 
     if (val < parent.getValue()) {
       parent.setLeft(node);
     } else {
       parent.setRight(node);
     }
-
     // Fix heights of the tree starting from new node
     balanceTree(parent);
   }
 
-  /**
-   * A function to rotate a node in the AVL tree
-   * 
-   * @param node the node to rotate
-   */
-  private void rotate(Node node) {
-    // If node is root, do nothing
 
-    if (node.getParent() == null) {
+
+  private void rotateLeft(Node node) {
+
+
+
+    Node parent = node.getParent();
+    Node child = node.getRight();
+
+    if (child == null) {
       return;
     }
 
-    Node parent = node.getParent();
-    Node grandparent = parent.getParent();
+    // Left rotate
+    node.setRight(child.getLeft());
+
+    child.setLeft(node);
 
 
-    // if node is the right child of parent
-    if (parent.getRight() == node) {
-      parent.setRight(node.getLeft());
-      node.setLeft(parent);
-
-      parent.setParent(node);
-
-      // If there is a right element, update its parent
-      if (parent.getRight() != null)
-        parent.getRight().setParent(parent);
-
-
+    if (parent == null) {
+      this.root = child;
+    } else if (parent.getLeft() == node) {
+      parent.setLeft(child);
     } else {
-      // if node is the left child of parent
-      parent.setLeft(node.getRight());
-      node.setRight(parent);
-
-      parent.setParent(node);
-
-      // if there is a left elemenet, update its parent
-      if (parent.getLeft() != null)
-        parent.getLeft().setParent(parent);
+      parent.setRight(child);
     }
 
-    // Set nodes parent to grandparent node
-    node.setParent(grandparent);
-
-    if (grandparent == null) {
-      // node is the new root
-      root = node;
-    } else {
-      // Update grandparent node
-      if (grandparent.getLeft() == parent) {
-        grandparent.setLeft(node);
-      } else {
-        grandparent.setRight(node);
-      }
-    }
-
+    node.setHeight();
+    child.setHeight();
 
 
   }
+
+
+  private void rotateRight(Node node) {
+
+
+    Node parent = node.getParent();
+    Node child = node.getRight();
+
+    if (child == null) {
+      return;
+    }
+
+    // Left rotate
+    node.setLeft(child.getRight());
+
+    child.setRight(node);
+
+    if (parent == null) {
+      this.root = child;
+    } else if (parent.getLeft() == node) {
+      parent.setLeft(child);
+    } else {
+      parent.setRight(child);
+    }
+
+  }
+
 
   /**
    * A helper function to balance the tree by moving up from a node fixing heights and rotating when
@@ -109,17 +110,41 @@ public class Avl {
 
     // Move up through tree up from node fixing heights
     while (next != null) {
+
+
       next.setHeight();
 
-      // Calculate the difference in heights
-      int heightDifference = next.getLeftHeight() - next.getRightHeight();
+      int heightDifference = next.getBalance();
 
 
-      // If needs rotation, rotate otherwise continue up the tree
+      // preform appropriate rotation based on balance
       if (heightDifference < -1) {
-        rotate(next.getRight());
+        if (next.getRight().getBalance() > 0) {
+
+          rotateRight(next.getRight());
+        }
+
+        rotateLeft(next);
+
+
+        next = node;
+
       } else if (heightDifference > 1) {
-        rotate(next.getLeft());
+
+        if (next.getLeft().getBalance() < 0) {
+          rotateLeft(next.getLeft());
+        }
+
+        rotateRight(next);
+
+        // System.out.println("post rotate");
+        // System.out.println("Node: " + next.getValue());
+        // System.out.println("Balance: " + next.getBalance());
+        // System.out.println(
+        // "Parent: " + (next.getParent() == null ? "null" : next.getParent().getValue()));
+        // System.out.println();
+
+        next = node;
       } else {
         next = next.getParent();
       }
@@ -138,6 +163,7 @@ public class Avl {
     Node next = this.root;
 
     while (next != null) {
+
       if (next.getValue() > key) {
         next = next.getLeft();
       } else if (next.getValue() < key) {
@@ -148,6 +174,10 @@ public class Avl {
     }
 
     return null;
+  }
+
+  public boolean contains(int key) {
+    return find(key) != null;
   }
 
   /**
@@ -187,7 +217,6 @@ public class Avl {
           parent.setRight(node.getLeft());
         }
 
-        node.getLeft().setParent(parent);
       }
       // Do the same thing but for on the right
     } else if (node.getLeft() == null) {
@@ -203,7 +232,6 @@ public class Avl {
           parent.setRight(node.getRight());
         }
 
-        node.getRight().setParent(parent);
       }
 
       // If there are two children
