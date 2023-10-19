@@ -39,14 +39,11 @@ public class Avl {
   }
 
 
-
   private void rotateLeft(Node node) {
-    // system.out.println("left Rotating node " + node.getValue() + " - " + node.getHeight() + " - "
-    // + node.getBalance());
-
-
     Node parent = node.getParent();
     Node child = node.getRight();
+
+    Boolean isParentLeft = parent != null && parent.getLeft() == node;
 
     if (child == null) {
       return;
@@ -54,13 +51,11 @@ public class Avl {
 
     // Left rotate
     node.setRight(child.getLeft());
-
     child.setLeft(node);
-
 
     if (parent == null) {
       this.root = child;
-    } else if (parent.getLeft() == node) {
+    } else if (isParentLeft) {
       parent.setLeft(child);
     } else {
       parent.setRight(child);
@@ -73,25 +68,23 @@ public class Avl {
 
 
   private void rotateRight(Node node) {
-    // system.out.println("Right Rotating node " + node.getValue() + " - " + node.getHeight() + " -
-    // "
-    // + node.getBalance());
-
 
     Node parent = node.getParent();
     Node child = node.getLeft();
+
+    Boolean isParentLeft = parent != null && parent.getLeft() == node;
+
 
     if (child == null) {
       return;
     }
 
     node.setLeft(child.getRight());
-
     child.setRight(node);
 
     if (parent == null) {
       this.root = child;
-    } else if (parent.getLeft() == node) {
+    } else if (isParentLeft) {
       parent.setLeft(child);
     } else {
       parent.setRight(child);
@@ -112,6 +105,7 @@ public class Avl {
   private void balanceTree(Node node) {
 
     Node next = node;
+
 
     // Move up through tree up from node fixing heights
     while (next != null) {
@@ -134,13 +128,17 @@ public class Avl {
       } else if (heightDifference > 1) {
 
         if (next.getLeft().getBalance() < 0) {
+
           rotateLeft(next.getLeft());
         }
 
         rotateRight(next);
-      }
 
-      next = next.getParent();
+        next = node;
+      } else {
+        next = next.getParent();
+
+      }
 
 
 
@@ -305,10 +303,11 @@ public class Avl {
 
         Node current = stack.pop();
 
-        int parentVal = current.getParent() == null ? 0 : current.getParent().getValue();
+        String parentVal =
+            current.getParent() == null ? "-NULL" : "" + current.getParent().getValue();
 
         // Add the node to the output
-        sb.append(String.format("%d [label=\"%d - (H%d, P%d)\"]\n", current.getValue(),
+        sb.append(String.format("%d [label=\"%d - (H%d, P%s)\"]\n", current.getValue(),
             current.getValue(), current.getHeight(), parentVal));
 
         // Add the edges and push the children to the stack

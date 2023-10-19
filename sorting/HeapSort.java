@@ -1,9 +1,7 @@
 import java.util.Arrays;
 import java.util.Random;
 
-/**
- * SelectionSort
- */
+
 public class HeapSort {
 
   public static void main(String[] args) {

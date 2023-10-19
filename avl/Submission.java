@@ -1,10 +1,7 @@
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class Submission {
@@ -56,6 +53,7 @@ public class Submission {
       return Integer.parseInt(next());
     }
   }
+
 
   static class Node {
     private int height;
@@ -171,8 +169,11 @@ public class Submission {
         this.left.parent = null;
       }
 
+
+
       if (l != null) {
-        l.parent = this;
+
+        l.setParent(this);;
       }
 
       this.left = l;
@@ -189,7 +190,7 @@ public class Submission {
       }
 
       if (r != null) {
-        r.parent = this;
+        r.setParent(this);;
       }
 
       this.right = r;
@@ -203,7 +204,7 @@ public class Submission {
      */
     public void setParent(Node p) {
 
-      if (p == null && this.parent != null) {
+      if (this.parent != null) {
         if (this.parent.left == this) {
           this.parent.left = null;
         } else {
@@ -233,6 +234,7 @@ public class Submission {
       return this.right;
     }
   }
+
 
 
   static class Avl {
@@ -271,15 +273,11 @@ public class Submission {
     }
 
 
-
     private void rotateLeft(Node node) {
-      // system.out.println("left Rotating node " + node.getValue() + " - " + node.getHeight() + " -
-      // "
-      // + node.getBalance());
-
-
       Node parent = node.getParent();
       Node child = node.getRight();
+
+      Boolean isParentLeft = parent != null && parent.getLeft() == node;
 
       if (child == null) {
         return;
@@ -287,13 +285,11 @@ public class Submission {
 
       // Left rotate
       node.setRight(child.getLeft());
-
       child.setLeft(node);
-
 
       if (parent == null) {
         this.root = child;
-      } else if (parent.getLeft() == node) {
+      } else if (isParentLeft) {
         parent.setLeft(child);
       } else {
         parent.setRight(child);
@@ -306,26 +302,23 @@ public class Submission {
 
 
     private void rotateRight(Node node) {
-      // system.out.println("Right Rotating node " + node.getValue() + " - " + node.getHeight() + "
-      // -
-      // "
-      // + node.getBalance());
-
 
       Node parent = node.getParent();
       Node child = node.getLeft();
+
+      Boolean isParentLeft = parent != null && parent.getLeft() == node;
+
 
       if (child == null) {
         return;
       }
 
       node.setLeft(child.getRight());
-
       child.setRight(node);
 
       if (parent == null) {
         this.root = child;
-      } else if (parent.getLeft() == node) {
+      } else if (isParentLeft) {
         parent.setLeft(child);
       } else {
         parent.setRight(child);
@@ -346,6 +339,7 @@ public class Submission {
     private void balanceTree(Node node) {
 
       Node next = node;
+
 
       // Move up through tree up from node fixing heights
       while (next != null) {
@@ -368,13 +362,17 @@ public class Submission {
         } else if (heightDifference > 1) {
 
           if (next.getLeft().getBalance() < 0) {
+
             rotateLeft(next.getLeft());
           }
 
           rotateRight(next);
-        }
 
-        next = next.getParent();
+          next = node;
+        } else {
+          next = next.getParent();
+
+        }
 
 
 
@@ -409,8 +407,5 @@ public class Submission {
     public boolean contains(int key) {
       return find(key) != null;
     }
-
   }
-
-
 }

@@ -112,8 +112,11 @@ class Node {
       this.left.parent = null;
     }
 
+
+
     if (l != null) {
-      l.parent = this;
+
+      l.setParent(this);;
     }
 
     this.left = l;
@@ -130,7 +133,7 @@ class Node {
     }
 
     if (r != null) {
-      r.parent = this;
+      r.setParent(this);;
     }
 
     this.right = r;
@@ -144,7 +147,7 @@ class Node {
    */
   public void setParent(Node p) {
 
-    if (p == null && this.parent != null) {
+    if (this.parent != null) {
       if (this.parent.left == this) {
         this.parent.left = null;
       } else {
